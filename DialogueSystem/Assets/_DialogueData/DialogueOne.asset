@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1102529a54dbfb5b28f6100f58d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1089b0438466fbe40a93583c21abf6ac, type: 3}
   m_Name: DialogueOne
   m_EditorClassIdentifier: 
-  text: Hi there...
+  text: Hi, I'm an NPC!
   responses:
   - {fileID: 11400000, guid: d513359af1c104dbdb83c5013fdcd224, type: 2}
   - {fileID: 11400000, guid: 4839c1183aaeb46e49d1bf67f103ec26, type: 2}

@@ -2,33 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : Singleton<DialogueManager>
 {
     #region SingletonStuff
-    static DialogueManager _instance = null;
-
-    public static DialogueManager Instance { get {return _instance; } }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (this == _instance)
-        {
-            _instance = null;
-        }
-    }
     #endregion
 
     public DialogueDatabase database;
@@ -38,6 +14,7 @@ public class DialogueManager : MonoBehaviour
     private DialogueLineData currentDialogue = null;
     private float currentTime = 0.0f;
 
+    // Dictionary for dialogue
     Dictionary<string, DialogueLineData> dialogueDatabase = new Dictionary<string, DialogueLineData>();
 
     public void Start()
@@ -47,19 +24,23 @@ public class DialogueManager : MonoBehaviour
 
     public void LoadDatabase()
     {
-        foreach(DialogueLineData line in database.data)
+        //ITERATE THROUGH DIALOUGE DATABASE AND ADD IT TO THE DICTIONARY
+        foreach (DialogueLineData line in database.data)
         {
             dialogueDatabase.Add(line.name, line);
         }
     }
 
+    //STARTS DIALOUGE
     public void StartDialogue(string dialogueName)
     {
         DialogueLineData data = null;
 
         if(dialogueDatabase.TryGetValue(dialogueName, out data))
         {
-            StartDialogue(data);
+            // only start dialogue if new line of dialogue
+            if (data != currentDialogue)
+                StartDialogue(data);
         }
     }
 
@@ -84,6 +65,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+            //RESET VALUES OF DIALOGUE AND TIME
             dialogueWaitTime = kDefaultWaitTime;
         }
         currentDialogue = lineToStart;
@@ -92,6 +74,9 @@ public class DialogueManager : MonoBehaviour
 
     private void PlayResponseLine(int currentResponseIndex)
     {
+        // disable UI before playing next response
+        EvtSystem.EventDispatcher.Raise<DisableUI>(new DisableUI());
+        
         if (currentDialogue.responses.Length > currentResponseIndex)
         {
             DialogueLineData line = currentDialogue.responses[currentResponseIndex];
@@ -101,6 +86,7 @@ public class DialogueManager : MonoBehaviour
 
     private void CreateResponseMessage()
     {
+        //HOW MANY RESPONSES YOU HAVE
         int numResponses = currentDialogue.responses.Length;
         if (numResponses > 0)
         {
@@ -114,20 +100,29 @@ public class DialogueManager : MonoBehaviour
                 responseMessage.responses[index].text = response.text;
                 responseMessage.responses[index].karmaScore = response.karmaScore;
                 int currentIndex = index;
-                responseMessage.responses[index].buttonAction = () => { this.PlayResponseLine(currentIndex)};
+                responseMessage.responses[index].buttonAction = () => { this.PlayResponseLine(currentIndex);  };
                 index++;
             }
             
 
             EvtSystem.EventDispatcher.Raise<ShowResponses>(responseMessage);
         }
+        else
+        {
+            // disable UI bc at the end of dialogue tree
+            EvtSystem.EventDispatcher.Raise<DisableUI>(new DisableUI());
+            currentDialogue = null;
+        }
     }
 
     public void Update()
     {
+        //CHECK IF CURRENT DIALOGUE IS PLAYING
         if (currentDialogue != null && dialogueWaitTime > 0.0f)
         {
+            //IF IT IS, ADD TIME TO TIMER
             currentTime += Time.deltaTime;
+            //IF TIMER REACHES DESIGNATED WAIT TIME, PLAY AUDIO
             if (currentTime >= dialogueWaitTime)
             {
                 dialogueWaitTime = 0.0f;

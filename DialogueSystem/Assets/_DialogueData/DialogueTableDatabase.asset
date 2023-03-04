@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 783648ffa4e214d509e3e0d2d2402da8, type: 3}
+  m_Script: {fileID: 11500000, guid: c2fa7b5b621923a4abb0782c99d53606, type: 3}
   m_Name: DialogueTableDatabase
   m_EditorClassIdentifier: 
   data:

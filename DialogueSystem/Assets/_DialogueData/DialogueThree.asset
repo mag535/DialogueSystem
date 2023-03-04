@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1102529a54dbfb5b28f6100f58d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1089b0438466fbe40a93583c21abf6ac, type: 3}
   m_Name: DialogueThree
   m_EditorClassIdentifier: 
-  text: Get Lost!
+  text: Hi, I'm another NPC!
   responses: []
-  karmaScore: -10
+  karmaScore: -1
   dialogueAudio: {fileID: 0}
   character: 0
