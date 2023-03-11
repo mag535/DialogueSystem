@@ -16,7 +16,7 @@ public class AudioManager : Singleton<DialogueManager>
         AudioSource dialogueAudio = gameObject.AddComponent<AudioSource>();
         dialogueAudio.clip = eventData.clipToPlay;
 
-        dialogueAudio.volume = eventData.volume;
-        dialogueAudio.pitch = eventData.pitch;
+        // play audio message
+        dialogueAudio.Play();
     }
 }
