@@ -3,12 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+class StringReveal
+{
+    string textToReveal = null;
+
+    float currentTime;
+    float secondsPerChar;
+    int currentStringIndex = 0;
+
+    public void StartReveal(string text, float duration)
+    {
+        secondsPerChar = duration / text.Length;
+        textToReveal = text;
+
+        currentStringIndex = 0;
+        currentTime = 0.0f;
+    }
+
+    public bool isDone()
+    {
+        return (textToReveal == null || currentStringIndex == (textToReveal.Length - 1));
+    }
+
+    public void ForceFinish()
+    {
+        currentStringIndex = (textToReveal.Length - 1);
+        currentTime = 0.0f;
+    }
+
+    public string GetCurrentRevealedText()
+    {
+        currentTime += Time.deltaTime;
+
+        if (currentTime >= secondsPerChar && currentStringIndex < (textToReveal.Length - 1))
+        {
+            currentStringIndex++;
+            currentTime = 0.0f;
+        }
+
+        return textToReveal.AsSpan(0, currentStringIndex).ToString();
+    }
+}
+
+
 public class UISystem : Singleton<UISystem>
 {
     public TMPro.TextMeshProUGUI dialogueText;
     public GameObject buttonContainer;
     public GameObject buttonPrefab;
     public GameObject UIRoot;
+
+    // for typewriter effect
+    public float lettersPerSecond;
+    private float currentTime;
 
     private Queue<GameObject> buttonPool;
     private List<GameObject> activeButtons;

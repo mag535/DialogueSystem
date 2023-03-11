@@ -156,6 +156,7 @@ MonoBehaviour:
   buttonContainer: {fileID: 557664483}
   buttonPrefab: {fileID: 7606262332788921620, guid: ec9769a7b962d9d4fb142509d3c6eb43, type: 3}
   UIRoot: {fileID: 1215995446}
+  lettersPerSecond: 100
 --- !u!4 &556736336
 Transform:
   m_ObjectHideFlags: 0
