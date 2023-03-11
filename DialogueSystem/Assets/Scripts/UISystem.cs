@@ -80,6 +80,26 @@ public class UISystem : Singleton<UISystem>
             }
 
             Button uiButton = button.GetComponent<Button>();
+            // change button's color depending on karma score
+            //  magenta == bad(-), yellow == good (+), gray == neutral (0)
+            var uiButtonColors = uiButton.colors;
+            if (response.karmaScore < 0)
+            {
+                uiButtonColors.normalColor = Color.magenta;
+                uiButtonColors.highlightedColor = new Color(0.97f, 0.47f, 0.97f, 1.0f);
+            }
+            else if (response.karmaScore > 0)
+            {
+                uiButtonColors.normalColor = Color.yellow;
+                uiButtonColors.highlightedColor = new Color(0.98f, 0.93f, 0.39f, 1.0f);
+            }
+            else
+            {
+                uiButtonColors.normalColor = Color.gray;
+                uiButtonColors.highlightedColor = new Color(0.72f, 0.72f, 0.72f, 1.0f);
+            }
+            uiButton.colors = uiButtonColors;
+
             // clear all listeners before reusing the button
             uiButton.onClick.RemoveAllListeners();
             // add fresh listener to button
