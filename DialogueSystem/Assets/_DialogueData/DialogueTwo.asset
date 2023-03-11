@@ -15,5 +15,5 @@ MonoBehaviour:
   text: Hi, I'm the player!
   responses: []
   karmaScore: 1
-  dialogueAudio: {fileID: 0}
+  dialogueAudio: {fileID: 8300000, guid: bb1ee3a7d583c114bbfa2ec4240fbc2b, type: 3}
   character: 0

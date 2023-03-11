@@ -15,5 +15,5 @@ MonoBehaviour:
   text: Hi, I'm another NPC!
   responses: []
   karmaScore: -1
-  dialogueAudio: {fileID: 0}
+  dialogueAudio: {fileID: 8300000, guid: aa8750ae4ce04fb4bbc1c263f2b23f08, type: 3}
   character: 0
