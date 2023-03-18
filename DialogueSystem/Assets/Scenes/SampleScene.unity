@@ -156,7 +156,6 @@ MonoBehaviour:
   buttonContainer: {fileID: 557664483}
   buttonPrefab: {fileID: 7606262332788921620, guid: ec9769a7b962d9d4fb142509d3c6eb43, type: 3}
   UIRoot: {fileID: 1215995446}
-  lettersPerSecond: 100
 --- !u!4 &556736336
 Transform:
   m_ObjectHideFlags: 0
@@ -279,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48737a7b99ac19419edfce4173d49e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 1150756631599799192, guid: f1aa37837ed99834bb9e1625b0e7bb1c, type: 3}
 --- !u!1 &652899625
 GameObject:
   m_ObjectHideFlags: 0
