@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="NameLabel" style="height: 16px; width: 352px; -unity-text-align: upper-center;" />
     <ui:TextField picking-mode="Ignore" label="Dialogue Line" value="filler text" text="filler text" binding-path="text" focusable="true" style="height: 47px; width: 353px; justify-content: space-around;" />
+    <ui:GroupBox name="Options" style="height: 65px; width: 351px;" />
 </ui:UXML>
