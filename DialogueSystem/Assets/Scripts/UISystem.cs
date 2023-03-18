@@ -1,7 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+
+class StringReveal
+{
+    string textToReveal = null;
+
+    float currentTime;
+    float secondsPerChar;
+    int currentStringIndex = 0;
+
+    public void StartReveal(string text, float duration)
+    {
+        secondsPerChar = duration / text.Length;
+        textToReveal = text;
+
+        currentStringIndex = 0;
+        currentTime = 0.0f;
+    }
+
+    public bool isDone()
+    {
+        return (textToReveal == null || currentStringIndex == (textToReveal.Length - 1));
+    }
+
+    public void ForceFinish()
+    {
+        currentStringIndex = (textToReveal.Length - 1);
+        currentTime = 0.0f;
+    }
+
+
+    public string GetCurrentRevealedText()
+    {
+        currentTime += Time.deltaTime;
+
+        if (currentTime >= secondsPerChar && currentStringIndex < (textToReveal.Length - 1))
+        {
+            currentStringIndex++;
+            currentTime = 0.0f;
+        }
+
+        return textToReveal.AsSpan(0, currentStringIndex).ToString();
+    }
+}
+
+
 
 public class UISystem : Singleton<UISystem>
 {
@@ -12,6 +59,8 @@ public class UISystem : Singleton<UISystem>
 
     private Queue<GameObject> buttonPool;
     private List<GameObject> activeButtons;
+
+    private StringReveal typewriter = new StringReveal();
 
     private void Start()
     {
@@ -42,7 +91,7 @@ public class UISystem : Singleton<UISystem>
     private void ShowUI(ShowDialogueText eventData)
     {
         UIRoot.SetActive(true);
-        dialogueText.text = eventData.text;
+        typewriter.StartReveal(eventData.text, eventData.duration);
     }
 
     private void HideUI(DisableUI data)
@@ -61,6 +110,13 @@ public class UISystem : Singleton<UISystem>
 
     private void ShowResponseButtons(ShowResponses eventData)
     {
+        //Force the dialogue line to display fully.
+        if (!typewriter.isDone())
+        {
+            typewriter.ForceFinish();
+            dialogueText.text = typewriter.GetCurrentRevealedText();
+        }
+
         // iterate through possible responses
         foreach (ResponseData response in eventData.responses)
         {
@@ -107,5 +163,11 @@ public class UISystem : Singleton<UISystem>
 
             activeButtons.Add(button);
         }
+    }
+
+    private void Update()
+    {
+        if (UIRoot.activeSelf && !typewriter.isDone())
+            dialogueText.text = typewriter.GetCurrentRevealedText();
     }
 }

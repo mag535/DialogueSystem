@@ -5,18 +5,20 @@ using UnityEngine;
 
 public class AudioManager : Singleton<DialogueManager>
 {
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
-        EvtSystem.EventDispatcher.AddListener<PlayAudio>(PlayDialogue);
+        EvtSystem.EventDispatcher.AddListener<PlayAudio>(PlayAudioClip);
     }
 
-    private void PlayDialogue(PlayAudio eventData)
+    private void PlayAudioClip(PlayAudio eventData)
     {
-        AudioSource dialogueAudio = gameObject.AddComponent<AudioSource>();
-        dialogueAudio.clip = eventData.clipToPlay;
-
-        // play audio message
-        dialogueAudio.Play();
+        audioSource.Stop();
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(eventData.clipToPlay);
+        }
     }
 }

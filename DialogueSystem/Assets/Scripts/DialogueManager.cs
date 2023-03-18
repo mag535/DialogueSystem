@@ -46,13 +46,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public void StartDialogue(DialogueLineData lineToStart)
     {
-        //Show Text on Screen
-        ShowDialogueText message = new ShowDialogueText();
-        message.text = lineToStart.text;
-        message.id = lineToStart.character;
-
-        EvtSystem.EventDispatcher.Raise<ShowDialogueText>(message);
-
         //Play dialogue Audio
         if (lineToStart.dialogueAudio != null)
         {
@@ -68,6 +61,15 @@ public class DialogueManager : Singleton<DialogueManager>
             //RESET VALUES OF DIALOGUE AND TIME
             dialogueWaitTime = kDefaultWaitTime;
         }
+
+        //Show Text on Screen
+        ShowDialogueText message = new ShowDialogueText();
+        message.text = lineToStart.text;
+        message.id = lineToStart.character;
+        message.duration = dialogueWaitTime;
+
+        EvtSystem.EventDispatcher.Raise<ShowDialogueText>(message);
+
         currentDialogue = lineToStart;
         currentTime = 0.0f;
     }
@@ -107,9 +109,12 @@ public class DialogueManager : Singleton<DialogueManager>
 
             EvtSystem.EventDispatcher.Raise<ShowResponses>(responseMessage);
         }
+        else if (numResponses == 1)
+        {
+            PlayResponseLine(0);
+        }
         else
         {
-            // disable UI bc at the end of dialogue tree
             EvtSystem.EventDispatcher.Raise<DisableUI>(new DisableUI());
             currentDialogue = null;
         }
@@ -117,13 +122,12 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public void Update()
     {
-        //CHECK IF CURRENT DIALOGUE IS PLAYING
         if (currentDialogue != null && dialogueWaitTime > 0.0f)
         {
-            //IF IT IS, ADD TIME TO TIMER
+            bool shouldSkip = Input.GetKeyUp(KeyCode.Space);
+
             currentTime += Time.deltaTime;
-            //IF TIMER REACHES DESIGNATED WAIT TIME, PLAY AUDIO
-            if (currentTime >= dialogueWaitTime)
+            if (currentTime >= dialogueWaitTime || shouldSkip)
             {
                 dialogueWaitTime = 0.0f;
                 CreateResponseMessage();
