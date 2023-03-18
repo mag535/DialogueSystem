@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,7 @@ class StringReveal
         currentTime = 0.0f;
     }
 
+
     public string GetCurrentRevealedText()
     {
         currentTime += Time.deltaTime;
@@ -47,6 +49,7 @@ class StringReveal
 }
 
 
+
 public class UISystem : Singleton<UISystem>
 {
     public TMPro.TextMeshProUGUI dialogueText;
@@ -54,12 +57,10 @@ public class UISystem : Singleton<UISystem>
     public GameObject buttonPrefab;
     public GameObject UIRoot;
 
-    // for typewriter effect
-    public float lettersPerSecond;
-    private float currentTime;
-
     private Queue<GameObject> buttonPool;
     private List<GameObject> activeButtons;
+
+    private StringReveal typewriter = new StringReveal();
 
     private void Start()
     {
@@ -90,7 +91,7 @@ public class UISystem : Singleton<UISystem>
     private void ShowUI(ShowDialogueText eventData)
     {
         UIRoot.SetActive(true);
-        dialogueText.text = eventData.text;
+        typewriter.StartReveal(eventData.text, eventData.duration);
     }
 
     private void HideUI(DisableUI data)
@@ -109,6 +110,13 @@ public class UISystem : Singleton<UISystem>
 
     private void ShowResponseButtons(ShowResponses eventData)
     {
+        //Force the dialogue line to display fully.
+        if (!typewriter.isDone())
+        {
+            typewriter.ForceFinish();
+            dialogueText.text = typewriter.GetCurrentRevealedText();
+        }
+
         // iterate through possible responses
         foreach (ResponseData response in eventData.responses)
         {
@@ -155,5 +163,11 @@ public class UISystem : Singleton<UISystem>
 
             activeButtons.Add(button);
         }
+    }
+
+    private void Update()
+    {
+        if (UIRoot.activeSelf && !typewriter.isDone())
+            dialogueText.text = typewriter.GetCurrentRevealedText();
     }
 }
